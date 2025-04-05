@@ -13,7 +13,7 @@ interface Particle {
 }
 
 interface ParticleBackgroundProps {
-  theme: 'default' | 'dark' | 'light';
+  theme: 'default' | 'dark';
 }
 
 const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ theme }) => {
@@ -37,13 +37,6 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ theme }) => {
       'rgba(61, 90, 128, 0.35)', // Slate blue
       'rgba(0, 18, 51, 0.3)', // Dark navy
       'rgba(25, 42, 86, 0.35)' // Midnight blue
-    ],
-    light: [
-      'rgba(255, 183, 77, 0.4)', // Soft orange
-      'rgba(255, 218, 121, 0.3)', // Light gold
-      'rgba(143, 188, 187, 0.35)', // Sage green
-      'rgba(246, 189, 96, 0.3)', // Apricot
-      'rgba(245, 215, 110, 0.35)' // Pale gold
     ]
   };
 
@@ -77,7 +70,7 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ theme }) => {
     window.addEventListener('mousemove', handleMouseMove);
     
     // Initialize particles
-    const particleCount = Math.min(Math.floor(window.innerWidth / 10), 150);
+    const particleCount = Math.min(Math.floor(window.innerWidth / 8), 180); // Increased particle count
     particles.current = [];
     
     const colors = getColors();
@@ -198,7 +191,7 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ theme }) => {
       });
       
       // Keep particle count reasonable
-      if (particles.current.length > 200) {
+      if (particles.current.length > 220) { // Increased maximum particles
         particles.current.shift();
       }
     }
@@ -207,7 +200,7 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ theme }) => {
   };
 
   const connectParticles = (particle: Particle, ctx: CanvasRenderingContext2D) => {
-    const connectionRadius = 120;
+    const connectionRadius = 130; // Increased connection radius
     
     particles.current.forEach(otherParticle => {
       if (particle === otherParticle) return;
@@ -224,13 +217,11 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ theme }) => {
         let connectionColor = 'rgba(147, 112, 219,';
         if (theme === 'dark') {
           connectionColor = 'rgba(61, 90, 128,';
-        } else if (theme === 'light') {
-          connectionColor = 'rgba(143, 188, 187,';
         }
         
         ctx.beginPath();
-        ctx.strokeStyle = `${connectionColor} ${opacity * 0.3})`;
-        ctx.lineWidth = opacity * 1.5;
+        ctx.strokeStyle = `${connectionColor} ${opacity * 0.35})`;
+        ctx.lineWidth = opacity * 1.8;
         ctx.moveTo(particle.x, particle.y);
         ctx.lineTo(otherParticle.x, otherParticle.y);
         ctx.stroke();
@@ -254,7 +245,7 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ theme }) => {
     <canvas 
       ref={canvasRef} 
       className="absolute inset-0 pointer-events-none z-0"
-      style={{ opacity: 0.8 }}
+      style={{ opacity: theme === 'dark' ? 0.8 : 0.7 }}
     />
   );
 };
