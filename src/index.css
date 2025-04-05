@@ -96,8 +96,21 @@
     border-radius: 20px;
   }
   
+  .scrollbar-thumb-blue-200::-webkit-scrollbar-thumb {
+    background-color: #bfdbfe;
+    border-radius: 20px;
+  }
+  
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600;
+  }
+  
+  .text-gradient-light {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-indigo-400 to-violet-500;
+  }
+  
+  .text-gradient-dark {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-300;
   }
   
   .card-glass {
@@ -122,6 +135,11 @@
 
   .frost-glass-dark {
     @apply bg-black/20 backdrop-blur-md border border-white/10 shadow-xl;
+  }
+  
+  /* Theme-specific gradients */
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70;
   }
 }
 
@@ -292,6 +310,7 @@
   animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Theme-specific background patterns */
 .bg-mesh {
   background-color: #4158D0;
   background-image: 
@@ -304,7 +323,7 @@
   background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
-/* Glass card animations */
+/* Enhance animation classes */
 .card-scale {
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -314,7 +333,7 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* Halo effects */
+/* Glow effects */
 .glow-on-hover {
   position: relative;
   z-index: 1;
@@ -336,21 +355,6 @@
 
 .glow-on-hover:hover::after {
   opacity: 1;
-}
-
-/* Frosted glass effect */
-.frosted-glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-}
-
-/* Dark mode frosted glass */
-.dark .frosted-glass {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Animated underline */
@@ -376,27 +380,105 @@
   transform-origin: bottom left;
 }
 
-/* Stylized scrollbar for webkit browsers */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+/* Star field animation */
+.star-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-*::-webkit-scrollbar {
-  width: 6px;
+.star-field::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 200%;
+  background-image: 
+    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 2px),
+    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 1px),
+    radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 2px);
+  background-size: 550px 550px, 350px 350px, 250px 250px;
+  background-position: 0 0, 40px 60px, 130px 270px;
+  animation: starsRotate 150s linear infinite;
 }
 
-*::-webkit-scrollbar-track {
-  background: transparent;
+@keyframes starsRotate {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-550px);
+  }
 }
 
-*::-webkit-scrollbar-thumb {
-  background-color: rgba(155, 155, 155, 0.5);
-  border-radius: 20px;
-  border: transparent;
+/* Theme-specific shiny button effect for light theme */
+.light .shiny-button::after {
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }
 
-/* Dark mode scrollbar */
-.dark *::-webkit-scrollbar-thumb {
-  background-color: rgba(100, 100, 100, 0.5);
+/* Theme-specific shiny button effect for dark theme */
+.dark .shiny-button::after {
+  background: linear-gradient(
+    to bottom right,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
+
+/* Shooting stars effect */
+.shooting-star {
+  position: absolute;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(to right, transparent, white, transparent);
+  transform: rotate(-45deg);
+  animation: shooting-star 2s ease-in-out infinite;
+  opacity: 0;
+}
+
+@keyframes shooting-star {
+  0% {
+    transform: translateX(0) translateY(0) rotate(-45deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(1000px) translateY(1000px) rotate(-45deg);
+    opacity: 0;
+  }
+}
+
+/* Rotate animation */
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-rotate {
+  animation: rotate 20s linear infinite;
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Keep existing code for the rest of the CSS file */

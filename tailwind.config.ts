@@ -130,6 +130,16 @@ export default {
 				'shooting-star': {
 					'0%': { transform: 'translateX(0) translateY(0) rotate(-45deg)', opacity: '1' },
 					'100%': { transform: 'translateX(1000px) translateY(1000px) rotate(-45deg)', opacity: '0' }
+				},
+				'morph': {
+					'0%': { borderRadius: '60% 40% 30% 70%/60% 30% 70% 40%' },
+					'50%': { borderRadius: '30% 60% 70% 40%/50% 60% 30% 60%' },
+					'100%': { borderRadius: '60% 40% 30% 70%/60% 30% 70% 40%' }
+				},
+				'float-rotate': {
+					'0%': { transform: 'translateY(0) rotate(0deg)' },
+					'50%': { transform: 'translateY(-10px) rotate(5deg)' },
+					'100%': { transform: 'translateY(0) rotate(0deg)' }
 				}
 			},
 			animation: {
@@ -145,7 +155,9 @@ export default {
 				'glow': 'glow 2s ease-in-out infinite',
 				'flip': 'flip 6s linear infinite',
 				'wave': 'wave 2.5s infinite',
-				'shooting-star': 'shooting-star 2s linear forwards'
+				'shooting-star': 'shooting-star 2s linear forwards',
+				'morph': 'morph 8s ease-in-out infinite',
+				'float-rotate': 'float-rotate 6s ease-in-out infinite',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
