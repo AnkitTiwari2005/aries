@@ -1,10 +1,11 @@
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Bot, Sparkles, MessageCircle, Loader, ArrowDown } from "lucide-react";
+import { Send, Bot, Sparkles, MessageCircle, Loader, ArrowDown, Moon, Sun, Star, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import ParticleBackground from "@/components/ParticleBackground";
 
 const API_URL = "https://ankit-chatbot.up.railway.app";
 
@@ -19,6 +20,7 @@ const Index = () => {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -44,6 +46,10 @@ const Index = () => {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages, showScrollButton]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -112,39 +118,89 @@ const Index = () => {
     }
   };
 
-  // Visual decorator elements
-  const renderDecorators = () => (
-    <>
-      <div className="hidden md:block absolute top-8 right-8 w-12 h-12 bg-indigo-500/20 rounded-full animate-spin-slow"></div>
-      <div className="hidden md:block absolute bottom-12 left-10 w-20 h-20 bg-purple-500/10 rounded-full animate-bounce-subtle"></div>
-      <div className="hidden md:block absolute top-1/4 left-6 w-4 h-4 bg-pink-500/30 rounded-full animate-pulse-slow"></div>
-      <div className="hidden md:block absolute bottom-1/3 right-4 w-8 h-8 bg-blue-500/20 rounded-full animate-pulse-slow"></div>
-    </>
-  );
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-mesh p-4 relative overflow-hidden">
-      {renderDecorators()}
+    <div className={`flex min-h-screen items-center justify-center p-4 relative overflow-hidden ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 to-indigo-900' : 'bg-mesh'}`}>
+      <ParticleBackground />
       
-      <Card className="w-full max-w-md shadow-2xl border-0 card-glass overflow-hidden animate-bounce-in">
-        <CardHeader className="bg-gradient-to-r from-violet-600 to-indigo-600 animate-gradient-shift">
+      {/* Theme Toggle */}
+      <button 
+        onClick={toggleTheme} 
+        className="absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 shadow-lg hover:bg-white/20 transition-all z-10"
+      >
+        {theme === 'light' ? <Moon className="text-indigo-600" size={20} /> : <Sun className="text-yellow-300" size={20} />}
+      </button>
+      
+      {/* Decorative elements */}
+      <div className="absolute top-1/4 left-1/6 w-48 h-48 bg-purple-500/30 rounded-full filter blur-3xl animate-pulse-slow"></div>
+      <div className="absolute bottom-1/4 right-1/6 w-72 h-72 bg-blue-500/20 rounded-full filter blur-3xl animate-pulse-slow"></div>
+      
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="star-field"></div>
+      </div>
+      
+      <Card 
+        className={`w-full max-w-md shadow-2xl overflow-hidden animate-bounce-in relative ${
+          theme === 'dark' ? 'bg-gray-900/70 border-gray-700' : 'bg-white/90 border-gray-200'
+        } backdrop-blur-lg`}
+      >
+        {/* Glow Effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 animate-gradient-shift"></div>
+
+        <CardHeader className={`relative z-10 ${
+          theme === 'dark' ? 'bg-gradient-to-r from-indigo-800 to-purple-900' : 'bg-gradient-to-r from-violet-600 to-indigo-600'
+        }`}>
           <CardTitle className="text-white flex items-center justify-center gap-3 text-2xl font-bold">
             <Bot size={28} className="animate-float" />
-            <span className="text-gradient-primary">AI</span> ChatBot
-            <Sparkles size={20} className="animate-pulse-glow text-amber-300" />
+            <span className="text-gradient-primary relative">
+              AI ChatBot
+              <span className="absolute -top-1 -right-6">
+                <Sparkles size={16} className="animate-pulse-glow text-yellow-300" />
+              </span>
+            </span>
+            <Star size={18} className="text-yellow-300 animate-spin-slow" />
           </CardTitle>
+          <div className="flex justify-center mt-2">
+            <div className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-xs text-white/80 flex items-center gap-1">
+              <Zap size={12} className="text-yellow-300" /> Powered by Advanced AI
+            </div>
+          </div>
         </CardHeader>
-        <CardContent className="p-0">
+        
+        <CardContent className={`p-0 relative z-10 ${theme === 'dark' ? 'text-white' : ''}`}>
           <div
             ref={chatContainerRef}
-            className="h-[450px] overflow-y-auto p-4 bg-chat-pattern space-y-4 scrollbar-thin scrollbar-thumb-gray-300"
+            className={`h-[450px] overflow-y-auto p-4 space-y-4 scrollbar-thin ${
+              theme === 'dark' ? 'bg-gray-800/50 scrollbar-thumb-gray-600' : 'bg-chat-pattern scrollbar-thumb-gray-300'
+            }`}
             onScroll={handleScroll}
           >
             {messages.length === 0 ? (
-              <div className="flex flex-col h-full items-center justify-center text-gray-400 gap-4 animate-fade-in">
-                <MessageCircle size={40} className="text-indigo-400 animate-bounce-subtle" />
-                <p className="text-center">Start a conversation with the AI assistant...</p>
-                <p className="text-sm text-center text-gray-400 max-w-xs">Ask me anything about topics, ideas, or just chat for fun!</p>
+              <div className="flex flex-col h-full items-center justify-center gap-4 animate-fade-in">
+                <div className="relative">
+                  <MessageCircle size={40} className={`${theme === 'dark' ? 'text-indigo-400' : 'text-indigo-400'} animate-bounce-subtle`} />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-ping-slow"></div>
+                </div>
+                <p className={`text-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Start a conversation with the AI assistant...</p>
+                <p className={`text-sm text-center max-w-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-400'}`}>Ask me anything about topics, ideas, or just chat for fun!</p>
+                
+                <div className="grid grid-cols-2 gap-2 w-full max-w-xs mt-4">
+                  {["Tell me a joke", "What is AI?", "Write a poem", "Today's weather"].map((suggestion, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setInputValue(suggestion);
+                        setTimeout(() => sendMessage(), 100);
+                      }}
+                      className={`text-xs px-3 py-2 rounded-lg border transition-all ${
+                        theme === 'dark' 
+                          ? 'bg-gray-700/70 border-gray-600 hover:bg-gray-600' 
+                          : 'bg-white/60 border-gray-200 hover:bg-indigo-50'
+                      } backdrop-blur-sm text-center shiny-button`}
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
               </div>
             ) : (
               messages.map((msg, index) => (
@@ -155,12 +211,18 @@ const Index = () => {
                   }`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-2xl px-4 py-2 animate-fade-in ${
+                    className={`max-w-[80%] rounded-2xl px-4 py-3 animate-fade-in ${
                       msg.sender === "You"
-                        ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20"
+                        ? theme === 'dark'
+                          ? "bg-indigo-600/80 text-white backdrop-blur-sm shadow-lg shadow-indigo-900/20"
+                          : "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20"
                         : msg.isTyping
-                        ? "bg-gray-200 animate-pulse"
-                        : "bg-white border border-gray-200 shadow-sm message-glass"
+                        ? theme === 'dark'
+                          ? "bg-gray-700/80 animate-pulse"
+                          : "bg-gray-200 animate-pulse"
+                        : theme === 'dark'
+                          ? "bg-gray-700/90 border border-gray-600 shadow-sm message-glass"
+                          : "bg-white/90 border border-gray-200 shadow-sm message-glass backdrop-blur-sm"
                     }`}
                   >
                     {msg.isTyping ? (
@@ -172,12 +234,14 @@ const Index = () => {
                     ) : (
                       <>
                         <div className={`font-semibold mb-1 flex items-center gap-1.5 ${
-                          msg.sender === "Bot" ? "text-indigo-600" : ""
+                          msg.sender === "Bot" 
+                            ? theme === 'dark' ? "text-indigo-300" : "text-indigo-600" 
+                            : ""
                         }`}>
-                          {msg.sender === "Bot" && <Bot size={16} />}
+                          {msg.sender === "Bot" && <Bot size={16} className={theme === 'dark' ? "text-indigo-300" : ""} />}
                           {msg.sender}
                         </div>
-                        <div>{msg.text}</div>
+                        <div className="leading-relaxed">{msg.text}</div>
                       </>
                     )}
                   </div>
@@ -189,13 +253,21 @@ const Index = () => {
           {showScrollButton && (
             <button 
               onClick={scrollToBottom}
-              className="absolute bottom-20 right-4 p-2 bg-indigo-600 text-white rounded-full shadow-lg animate-bounce-subtle hover:bg-indigo-700 transition-colors"
+              className={`absolute bottom-20 right-4 p-2 rounded-full shadow-lg animate-bounce-subtle transition-colors z-20 ${
+                theme === 'dark' 
+                  ? 'bg-indigo-600/80 text-white hover:bg-indigo-700 backdrop-blur-sm' 
+                  : 'bg-indigo-600 text-white hover:bg-indigo-700'
+              }`}
             >
               <ArrowDown size={18} />
             </button>
           )}
           
-          <div className="p-4 bg-white/80 backdrop-blur-sm border-t border-gray-200 rounded-b-lg flex gap-2 animate-slide-up">
+          <div className={`p-4 rounded-b-lg flex gap-2 animate-slide-up relative z-10 ${
+            theme === 'dark' 
+              ? 'bg-gray-800/80 backdrop-blur-md border-t border-gray-700' 
+              : 'bg-white/80 backdrop-blur-sm border-t border-gray-200'
+          }`}>
             <Input
               type="text"
               placeholder="Type a message..."
@@ -203,12 +275,20 @@ const Index = () => {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
               disabled={isLoading}
-              className="bg-gray-50/80 border-0 focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className={`${
+                theme === 'dark' 
+                  ? 'bg-gray-700/60 border-gray-600 text-white placeholder:text-gray-400' 
+                  : 'bg-gray-50/80 border-0'
+              } focus-visible:ring-2 focus-visible:ring-indigo-500`}
             />
             <Button 
               onClick={sendMessage} 
               disabled={isLoading || !inputValue.trim()}
-              className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 transition-all duration-300 animate-pulse-glow disabled:animate-none"
+              className={`${
+                theme === 'dark'
+                  ? 'bg-gradient-to-r from-indigo-700 to-purple-700 hover:from-indigo-600 hover:to-purple-600'
+                  : 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700'
+              } transition-all duration-300 animate-pulse-glow disabled:animate-none`}
             >
               {isLoading ? <Loader size={18} className="animate-spin" /> : <Send size={18} />}
             </Button>

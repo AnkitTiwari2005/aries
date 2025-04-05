@@ -97,6 +97,39 @@ export default {
 				},
 				'ping-slow': {
 					'75%, 100%': { transform: 'scale(1.5)', opacity: '0' }
+				},
+				'float-horizontal': {
+					'0%, 100%': { transform: 'translateX(0)' },
+					'50%': { transform: 'translateX(10px)' }
+				},
+				'typing': {
+					'0%, 100%': { width: '0%' },
+					'50%': { width: '100%' }
+				},
+				'blink': {
+					'0%, 100%': { borderColor: 'transparent' },
+					'50%': { borderColor: 'currentColor' }
+				},
+				'glow': {
+					'0%, 100%': { boxShadow: '0 0 5px rgba(123, 97, 255, 0.3), 0 0 10px rgba(123, 97, 255, 0.2)' },
+					'50%': { boxShadow: '0 0 20px rgba(123, 97, 255, 0.6), 0 0 30px rgba(123, 97, 255, 0.4)' }
+				},
+				'flip': {
+					'0%': { transform: 'perspective(400px) rotateY(0)' },
+					'100%': { transform: 'perspective(400px) rotateY(360deg)' }
+				},
+				'wave': {
+					'0%': { transform: 'rotate(0deg)' },
+					'10%': { transform: 'rotate(14deg)' },
+					'20%': { transform: 'rotate(-8deg)' },
+					'30%': { transform: 'rotate(14deg)' },
+					'40%': { transform: 'rotate(-4deg)' },
+					'50%': { transform: 'rotate(10deg)' },
+					'60%, 100%': { transform: 'rotate(0deg)' }
+				},
+				'shooting-star': {
+					'0%': { transform: 'translateX(0) translateY(0) rotate(-45deg)', opacity: '1' },
+					'100%': { transform: 'translateX(1000px) translateY(1000px) rotate(-45deg)', opacity: '0' }
 				}
 			},
 			animation: {
@@ -106,7 +139,13 @@ export default {
 				'shimmer': 'shimmer 2s linear infinite',
 				'bounce-subtle': 'bounce-subtle 2s ease-in-out infinite',
 				'spin-slow': 'spin-slow 8s linear infinite',
-				'ping-slow': 'ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite'
+				'ping-slow': 'ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+				'float-horizontal': 'float-horizontal 3s ease-in-out infinite',
+				'typing': 'typing 3.5s steps(40, end) infinite, blink .75s step-end infinite',
+				'glow': 'glow 2s ease-in-out infinite',
+				'flip': 'flip 6s linear infinite',
+				'wave': 'wave 2.5s infinite',
+				'shooting-star': 'shooting-star 2s linear forwards'
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
