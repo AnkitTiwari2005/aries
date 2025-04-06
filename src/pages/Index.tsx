@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Bot, Sparkles, MessageCircle, Loader, ArrowDown, Moon, Palette } from "lucide-react";
+import { Send, Bot, Sparkles, MessageCircle, Loader, ArrowDown, Moon, Palette, Copy, User, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -24,6 +24,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [theme, setTheme] = useState<ThemeType>('default');
+  const [copied, setCopied] = useState<number | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -49,6 +50,16 @@ const Index = () => {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages, showScrollButton]);
+
+  // Reset copied state after 2 seconds
+  useEffect(() => {
+    if (copied !== null) {
+      const timer = setTimeout(() => {
+        setCopied(null);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [copied]);
 
   // Get theme-specific class names
   const getThemeClasses = () => {
@@ -122,6 +133,23 @@ const Index = () => {
     }
   };
 
+  const copyToClipboard = (text: string, index: number) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(index);
+      toast({
+        title: "Copied to clipboard",
+        description: "Message content has been copied to your clipboard",
+      });
+    }).catch(err => {
+      console.error('Error copying text: ', err);
+      toast({
+        title: "Failed to copy",
+        description: "Could not copy the message to clipboard",
+        variant: "destructive",
+      });
+    });
+  };
+
   const sendMessage = async () => {
     const message = inputValue.trim();
     if (!message) return;
@@ -170,10 +198,9 @@ const Index = () => {
     }
   };
 
-  // Theme icon map
-  const themeIcons = {
-    'default': <Palette size={18} className="text-violet-300" />,
-    'dark': <Moon size={18} className="text-blue-300" />
+  // Toggle between themes
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'default' ? 'dark' : 'default');
   };
 
   return (
@@ -182,14 +209,14 @@ const Index = () => {
       
       {/* Theme Toggle */}
       <div className="absolute top-5 right-5 z-10">
-        <ToggleGroup type="single" value={theme} onValueChange={(value) => value && setTheme(value as ThemeType)}>
-          <ToggleGroupItem value="default" aria-label="Default theme" className="backdrop-blur-lg bg-white/10 border border-white/20 shadow-lg">
-            {themeIcons.default}
-          </ToggleGroupItem>
-          <ToggleGroupItem value="dark" aria-label="Dark theme" className="backdrop-blur-lg bg-white/10 border border-white/20 shadow-lg">
-            {themeIcons.dark}
-          </ToggleGroupItem>
-        </ToggleGroup>
+        <Button 
+          onClick={toggleTheme} 
+          size="sm"
+          className="backdrop-blur-lg bg-white/10 border border-white/20 shadow-lg"
+        >
+          {theme === 'dark' ? <Moon size={16} className="mr-1" /> : <Palette size={16} className="mr-1" />}
+          {theme === 'dark' ? "Dark" : "Default"}
+        </Button>
       </div>
       
       {/* Decorative elements */}
@@ -201,7 +228,7 @@ const Index = () => {
       </div>
       
       <Card 
-        className={`w-full max-w-2xl shadow-2xl overflow-hidden animate-bounce-in relative ${getCardClasses()} backdrop-blur-lg`}
+        className={`w-full max-w-3xl shadow-2xl overflow-hidden animate-bounce-in relative ${getCardClasses()} backdrop-blur-lg`}
       >
         {/* Glow Effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 animate-gradient-shift"></div>
@@ -210,7 +237,7 @@ const Index = () => {
           <CardTitle className="text-white flex items-center justify-center gap-3 text-2xl font-bold">
             <Bot size={30} className="animate-float" />
             <span className="text-gradient-primary relative">
-              AI ChatBot
+              Aries
               <span className="absolute -top-1.5 -right-6">
                 <Sparkles size={18} className="animate-pulse-glow text-yellow-300" />
               </span>
@@ -219,7 +246,7 @@ const Index = () => {
           </CardTitle>
           <div className="flex justify-center mt-2">
             <div className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-xs text-white/90 flex items-center gap-1 border border-white/10">
-              <span className="text-green-400 animate-pulse">●</span> Powered by Advanced AI
+              <span className="text-green-400 animate-pulse">●</span> Powered by AriOS
             </div>
           </div>
         </CardHeader>
@@ -236,7 +263,7 @@ const Index = () => {
                   <MessageCircle size={48} className={`${theme === 'dark' ? 'text-indigo-400' : 'text-indigo-500'} animate-bounce-subtle`} />
                   <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-ping-slow"></div>
                 </div>
-                <p className={`text-lg font-medium ${getEmptyStateTextColors().primary}`}>Start a conversation with the AI assistant</p>
+                <p className={`text-lg font-medium ${getEmptyStateTextColors().primary}`}>Start a conversation with Aries</p>
                 <p className={`text-sm text-center max-w-sm ${getEmptyStateTextColors().secondary}`}>Ask me anything about topics, ideas, or just chat for fun!</p>
                 
                 <div className="grid grid-cols-2 gap-3 w-full max-w-sm mt-4">
@@ -263,7 +290,7 @@ const Index = () => {
                   }`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-2xl px-5 py-3.5 animate-fade-in ${
+                    className={`max-w-[85%] rounded-2xl px-5 py-3.5 animate-fade-in relative group ${
                       msg.sender === "You"
                         ? theme === 'dark'
                           ? "bg-indigo-600/90 text-white backdrop-blur-sm shadow-lg shadow-indigo-900/30"
@@ -290,10 +317,31 @@ const Index = () => {
                             ? theme === 'dark' ? "text-indigo-300" : "text-indigo-600" 
                             : ""
                         }`}>
-                          {msg.sender === "Bot" && <Bot size={16} className={theme === 'dark' ? "text-indigo-300" : ""} />}
+                          {msg.sender === "Bot" ? 
+                            <Bot size={16} className={theme === 'dark' ? "text-indigo-300" : ""} /> : 
+                            <User size={16} className="text-white" />
+                          }
                           {msg.sender}
+                          
+                          {/* Copy button - only show for bot messages */}
+                          {msg.sender === "Bot" && (
+                            <button 
+                              onClick={() => copyToClipboard(msg.text, index)}
+                              className={`ml-auto opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-md ${
+                                theme === 'dark' 
+                                  ? 'hover:bg-gray-600/50' 
+                                  : 'hover:bg-gray-200/50'
+                              }`}
+                              aria-label="Copy message"
+                            >
+                              {copied === index ? 
+                                <Check size={14} className="text-green-400" /> : 
+                                <Copy size={14} className={theme === 'dark' ? "text-gray-400" : "text-gray-500"} />
+                              }
+                            </button>
+                          )}
                         </div>
-                        <div className="leading-relaxed">{msg.text}</div>
+                        <div className="leading-relaxed whitespace-pre-wrap">{msg.text}</div>
                       </>
                     )}
                   </div>
