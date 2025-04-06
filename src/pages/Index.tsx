@@ -1,12 +1,13 @@
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Bot, Sparkles, MessageCircle, Loader, ArrowDown, Moon, Palette, Copy, User, Check } from "lucide-react";
+import { Send, MessageCircle, Loader, ArrowDown, Moon, Palette, Copy, User, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import ParticleBackground from "@/components/ParticleBackground";
+import AriesLogo from "@/components/AriesLogo";
 
 const API_URL = "https://ankit-chatbot.up.railway.app";
 
@@ -160,7 +161,7 @@ const Index = () => {
     setIsLoading(true);
 
     // Show typing indicator
-    appendMessage("Bot", "", true);
+    appendMessage("Aries", "", true);
 
     try {
       const response = await fetch(`${API_URL}/chat`, {
@@ -175,7 +176,7 @@ const Index = () => {
       // Remove typing indicator and add bot response
       setMessages(prev => {
         const filtered = prev.filter(msg => !msg.isTyping);
-        return [...filtered, { sender: "Bot", text: data.response }];
+        return [...filtered, { sender: "Aries", text: data.response }];
       });
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -184,13 +185,13 @@ const Index = () => {
         const filtered = prev.filter(msg => !msg.isTyping);
         return [
           ...filtered,
-          { sender: "Bot", text: "Error: Failed to connect to the server." },
+          { sender: "Aries", text: "Error: Failed to connect to the server." },
         ];
       });
       
       toast({
         title: "Connection Error",
-        description: "Failed to reach the AI assistant. Please try again later.",
+        description: "Failed to reach Aries. Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -228,21 +229,20 @@ const Index = () => {
       </div>
       
       <Card 
-        className={`w-full max-w-3xl shadow-2xl overflow-hidden animate-bounce-in relative ${getCardClasses()} backdrop-blur-lg`}
+        className={`w-full max-w-4xl shadow-2xl overflow-hidden animate-bounce-in relative ${getCardClasses()} backdrop-blur-lg`}
       >
         {/* Glow Effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 animate-gradient-shift"></div>
 
         <CardHeader className={`relative z-10 ${getHeaderClasses()} py-6`}>
           <CardTitle className="text-white flex items-center justify-center gap-3 text-2xl font-bold">
-            <Bot size={30} className="animate-float" />
+            <AriesLogo size={38} />
             <span className="text-gradient-primary relative">
               Aries
               <span className="absolute -top-1.5 -right-6">
-                <Sparkles size={18} className="animate-pulse-glow text-yellow-300" />
+                <span className="text-yellow-300 animate-pulse">✨</span>
               </span>
             </span>
-            <span className="ml-1 text-yellow-300 animate-spin-slow inline-block">✨</span>
           </CardTitle>
           <div className="flex justify-center mt-2">
             <div className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-xs text-white/90 flex items-center gap-1 border border-white/10">
@@ -259,15 +259,21 @@ const Index = () => {
           >
             {messages.length === 0 ? (
               <div className="flex flex-col h-full items-center justify-center gap-5 animate-fade-in pt-10">
+                <AriesLogo size={68} className={theme === 'dark' ? "text-indigo-400" : "text-indigo-500"} />
                 <div className="relative">
-                  <MessageCircle size={48} className={`${theme === 'dark' ? 'text-indigo-400' : 'text-indigo-500'} animate-bounce-subtle`} />
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-ping-slow"></div>
+                  <h2 className={`text-2xl font-bold mb-1 ${getEmptyStateTextColors().primary}`}>
+                    Hey! I'm Aries 👋
+                  </h2>
+                  <div className="absolute -top-6 -right-6 animate-wave">
+                    <span className="text-xl">✨</span>
+                  </div>
                 </div>
-                <p className={`text-lg font-medium ${getEmptyStateTextColors().primary}`}>Start a conversation with Aries</p>
-                <p className={`text-sm text-center max-w-sm ${getEmptyStateTextColors().secondary}`}>Ask me anything about topics, ideas, or just chat for fun!</p>
+                <p className={`text-lg text-center max-w-md ${getEmptyStateTextColors().secondary}`}>
+                  What would you like to talk about today? I'm here to assist with information, creative ideas, or just chat!
+                </p>
                 
                 <div className="grid grid-cols-2 gap-3 w-full max-w-sm mt-4">
-                  {["Tell me a joke", "What is AI?", "Write a poem", "Today's weather"].map((suggestion, index) => (
+                  {["Tell me a joke", "What is AriOS?", "Write a poem", "Today's weather"].map((suggestion, index) => (
                     <button
                       key={index}
                       onClick={() => {
@@ -313,18 +319,18 @@ const Index = () => {
                     ) : (
                       <>
                         <div className={`font-semibold mb-1.5 flex items-center gap-1.5 ${
-                          msg.sender === "Bot" 
+                          msg.sender === "Aries" 
                             ? theme === 'dark' ? "text-indigo-300" : "text-indigo-600" 
                             : ""
                         }`}>
-                          {msg.sender === "Bot" ? 
-                            <Bot size={16} className={theme === 'dark' ? "text-indigo-300" : ""} /> : 
+                          {msg.sender === "Aries" ? 
+                            <AriesLogo size={18} className={theme === 'dark' ? "text-indigo-300" : ""} /> : 
                             <User size={16} className="text-white" />
                           }
                           {msg.sender}
                           
-                          {/* Copy button - only show for bot messages */}
-                          {msg.sender === "Bot" && (
+                          {/* Copy button - only show for Aries messages */}
+                          {msg.sender === "Aries" && (
                             <button 
                               onClick={() => copyToClipboard(msg.text, index)}
                               className={`ml-auto opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-md ${
