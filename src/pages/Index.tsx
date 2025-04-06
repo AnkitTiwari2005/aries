@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import ParticleBackground from "@/components/ParticleBackground";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const API_URL = "https://ankit-chatbot.up.railway.app";
 
@@ -160,7 +161,7 @@ const Index = () => {
     setIsLoading(true);
 
     // Show typing indicator
-    appendMessage("Bot", "", true);
+    appendMessage("Aries", "", true);
 
     try {
       const response = await fetch(`${API_URL}/chat`, {
@@ -175,7 +176,7 @@ const Index = () => {
       // Remove typing indicator and add bot response
       setMessages(prev => {
         const filtered = prev.filter(msg => !msg.isTyping);
-        return [...filtered, { sender: "Bot", text: data.response }];
+        return [...filtered, { sender: "Aries", text: data.response }];
       });
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -184,7 +185,7 @@ const Index = () => {
         const filtered = prev.filter(msg => !msg.isTyping);
         return [
           ...filtered,
-          { sender: "Bot", text: "Error: Failed to connect to the server." },
+          { sender: "Aries", text: "Error: Failed to connect to the server." },
         ];
       });
       
@@ -313,18 +314,20 @@ const Index = () => {
                     ) : (
                       <>
                         <div className={`font-semibold mb-1.5 flex items-center gap-1.5 ${
-                          msg.sender === "Bot" 
+                          msg.sender === "Aries" 
                             ? theme === 'dark' ? "text-indigo-300" : "text-indigo-600" 
                             : ""
                         }`}>
-                          {msg.sender === "Bot" ? 
+                          {msg.sender === "Aries" ? 
                             <Bot size={16} className={theme === 'dark' ? "text-indigo-300" : ""} /> : 
-                            <User size={16} className="text-white" />
+                            <Avatar className="h-5 w-5 mr-1">
+                              <AvatarFallback className="bg-indigo-600 text-white text-xs">U</AvatarFallback>
+                            </Avatar>
                           }
                           {msg.sender}
                           
                           {/* Copy button - only show for bot messages */}
-                          {msg.sender === "Bot" && (
+                          {msg.sender === "Aries" && (
                             <button 
                               onClick={() => copyToClipboard(msg.text, index)}
                               className={`ml-auto opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-md ${
