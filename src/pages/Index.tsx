@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Send, Bot, Sparkles, MessageCircle, Loader, ArrowDown, Moon, Palette, Copy, User, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,7 +28,6 @@ const Index = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  // Monitor scroll position to show/hide scroll button
   const handleScroll = () => {
     if (!chatContainerRef.current) return;
     
@@ -52,7 +50,6 @@ const Index = () => {
     }
   }, [messages, showScrollButton]);
 
-  // Reset copied state after 2 seconds
   useEffect(() => {
     if (copied !== null) {
       const timer = setTimeout(() => {
@@ -62,7 +59,6 @@ const Index = () => {
     }
   }, [copied]);
 
-  // Get theme-specific class names
   const getThemeClasses = () => {
     return theme === 'dark'
       ? 'bg-gradient-to-br from-gray-900 to-indigo-900'
@@ -155,12 +151,10 @@ const Index = () => {
     const message = inputValue.trim();
     if (!message) return;
 
-    // Display user message
     appendMessage("You", message);
     setInputValue("");
     setIsLoading(true);
 
-    // Show typing indicator
     appendMessage("Aries", "", true);
 
     try {
@@ -173,14 +167,12 @@ const Index = () => {
       if (!response.ok) throw new Error(`Server Error: ${response.status}`);
       const data = await response.json();
 
-      // Remove typing indicator and add bot response
       setMessages(prev => {
         const filtered = prev.filter(msg => !msg.isTyping);
         return [...filtered, { sender: "Aries", text: data.response }];
       });
     } catch (error) {
       console.error("Error fetching response:", error);
-      // Remove typing indicator and show error
       setMessages(prev => {
         const filtered = prev.filter(msg => !msg.isTyping);
         return [
@@ -199,7 +191,6 @@ const Index = () => {
     }
   };
 
-  // Toggle between themes
   const toggleTheme = () => {
     setTheme(prev => prev === 'default' ? 'dark' : 'default');
   };
@@ -208,7 +199,6 @@ const Index = () => {
     <div className={`flex min-h-screen items-center justify-center p-4 relative overflow-hidden ${getThemeClasses()}`}>
       <ParticleBackground theme={theme} />
       
-      {/* Theme Toggle */}
       <div className="absolute top-5 right-5 z-10">
         <Button 
           onClick={toggleTheme} 
@@ -220,7 +210,6 @@ const Index = () => {
         </Button>
       </div>
       
-      {/* Decorative elements */}
       <div className="absolute top-1/4 left-1/6 w-60 h-60 bg-purple-500/30 rounded-full filter blur-3xl animate-pulse-slow"></div>
       <div className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-blue-500/20 rounded-full filter blur-3xl animate-pulse-slow"></div>
       
@@ -231,7 +220,6 @@ const Index = () => {
       <Card 
         className={`w-full max-w-3xl shadow-2xl overflow-hidden animate-bounce-in relative ${getCardClasses()} backdrop-blur-lg`}
       >
-        {/* Glow Effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 animate-gradient-shift"></div>
 
         <CardHeader className={`relative z-10 ${getHeaderClasses()} py-6`}>
@@ -320,13 +308,14 @@ const Index = () => {
                         }`}>
                           {msg.sender === "Aries" ? 
                             <Bot size={16} className={theme === 'dark' ? "text-indigo-300" : ""} /> : 
-                            <Avatar className="h-5 w-5 mr-1">
-                              <AvatarFallback className="bg-indigo-600 text-white text-xs">U</AvatarFallback>
+                            <Avatar className="h-6 w-6 mr-1 border-2 border-white shadow-sm">
+                              <AvatarFallback className="bg-gradient-to-br from-violet-600 to-indigo-600 text-white text-xs font-semibold">
+                                {msg.sender.charAt(0)}
+                              </AvatarFallback>
                             </Avatar>
                           }
                           {msg.sender}
                           
-                          {/* Copy button - only show for bot messages */}
                           {msg.sender === "Aries" && (
                             <button 
                               onClick={() => copyToClipboard(msg.text, index)}
